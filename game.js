@@ -1,3 +1,8 @@
+//Charles Beck
+//cs 413
+//5/18/2016
+//
+
 var gameport = document.getElementById("gameport");
 
 var renderer = PIXI.autoDetectRenderer(400,400, {backgroundColor: 0x3344ee});
@@ -91,6 +96,7 @@ function onKeyDown(key) {
         // If the W key is pressed, move the player up.
         if (player.position.y != 0) {
             player.position.y -= 5;
+			playerBox.position.y -= 5;
 			
         }
     }
@@ -100,6 +106,8 @@ function onKeyDown(key) {
         // If the S key  is pressed, move the player down.
         if (player.position.y != 368) {
             player.position.y += 5;
+			playerBox.position.y += 5;
+
         }
 		
 	}
@@ -107,6 +115,7 @@ function onKeyDown(key) {
     if (key.keyCode === 65 ) {
         // If the A key is pressed, move the player to the left.
             player.position.x -= 5;
+			playerBox.position.x -= 5;
         
     }
   
@@ -114,6 +123,7 @@ function onKeyDown(key) {
         // If the D key is pressed, move the player to the right.
         if (player.position.x != 368) {
             player.position.x += 5;
+			playerBox.position.x += 5;
         }
     }
 }
@@ -183,23 +193,35 @@ function finishBoxSpawn() {
     var randomX = Math.floor((Math.random() * 10) + 0);
     var randomY = Math.floor((Math.random() * 10) + 0);
   
-    // Set the position of our target
     finish.position.x = 64 * randomX;
     finish.position.y = 32 * randomY;
 }
 		finishBoxSpawn();
 		animate();
-function checkPosition() {
-    // If the player and target are at the same position, spawn the target in another position
-    if (finish.position.x === player.position.x && finish.position.y === player.position.y) {
-        finishBoxSpawn();
-}}
-	animate();
-	
 
+  
+    // Create the player box
+    var playerBox = new PIXI.Graphics();
+    playerBox.drawRect(player.position.x, player.position.y, 32, 64); // generate rectangles
+
+  
+    // Create the finish box
+    var finishBox = new PIXI.Graphics();
+   finishBox.drawRect(finish.position.x, finish.position.y, 64, 32);
+
+   
+var count =0;
+
+	function checkPosition() {
+    // If the player and target are at the same position, spawn the target in another position
+    if (playerBox.containsPoint(finish.position.x, finish.position.y) === true) {
+        finishBoxSpawn(); //Should change the position of the pizza when you reach it
+		count++;
+    }
+}
+    // Add boxes to the stage
 	
    function animate(){
 		requestAnimationFrame(animate);
-		checkPosition();
 		renderer.render(stage);}
 	animate();
